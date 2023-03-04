@@ -9,6 +9,9 @@ rotas.get("", (req, res) => {
 
 rotas.post('/usuarios', UsuarioController.store)
 rotas.get('/usuarios', UsuarioController.index)
+rotas.get('/usuarios/:id', UsuarioController.indexByUserId)
+rotas.put('/usuarios/:id', UsuarioController.update);
+rotas.delete('/usuarios/:id', UsuarioController.destroy);
 
 
 module.exports = rotas;
