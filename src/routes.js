@@ -1,5 +1,6 @@
 const { Router } = require("express");
 const UsuarioController = require("./Controllers/UsuarioController");
+const SessoesController = require("./Controllers/SessoesController");
 
 const rotas = Router();
 
@@ -12,6 +13,11 @@ rotas.get('/usuarios', UsuarioController.index)
 rotas.get('/usuarios/:id', UsuarioController.indexByUserId)
 rotas.put('/usuarios/:id', UsuarioController.update);
 rotas.delete('/usuarios/:id', UsuarioController.destroy);
+
+rotas.post('/sessoes', SessoesController.store);
+rotas.get('/sessoes', SessoesController.index);
+rotas.get('/sessoes/:id', SessoesController.indexByUserId);
+rotas.delete('/sessoes/:id', SessoesController.destroy)
 
 
 module.exports = rotas;
