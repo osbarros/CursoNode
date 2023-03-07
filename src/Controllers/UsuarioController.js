@@ -15,7 +15,7 @@ class UsuarioController {
 
   async indexByUserId(req, res) {
     const { id } = req.params;
-    const usuario = await UsuarioModel.findById(id);
+    const usuario = await UsuarioModel.findById(id).exec();
 
     return res.status(200).json(usuario);
   }
@@ -24,7 +24,7 @@ class UsuarioController {
     const { id } = req.params;
     const dados = req.body;
 
-    await UsuarioModel.findByIdAndUpdate(id, dados);
+    await UsuarioModel.findByIdAndUpdate(id, dados).exec();
 
     return res.status(200).json({ "mensagem": "Usuário atualizado com sucesso!" });
   }
@@ -32,7 +32,7 @@ class UsuarioController {
   async destroy(req, res) {
     const { id } = req.params;
 
-    await UsuarioModel.findByIdAndDelete(id);
+    await UsuarioModel.findByIdAndDelete(id).exec();
 
     return res.status(200).json({ "mensagem": "Usuário deletado com sucesso!" });
 
