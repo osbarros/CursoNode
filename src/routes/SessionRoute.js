@@ -12,6 +12,8 @@ SessionRoutes.route("/:id")
   .put(SessionController.update)
   .delete(SessionController.destroy);
 
-SessionRoutes.route("/user/:userId").get(SessionController.getByUserId);
+SessionRoutes.route("/user/:userId")
+  .get(SessionController.getByUserId)
+  .post(SessionController.endSession);
 
 export default SessionRoutes;

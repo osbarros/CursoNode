@@ -6,7 +6,7 @@ export async function get(req, res) {
     const users = await UserModel.find().lean().exec();
     res.status(200).json(users);
   } catch (error) {
-    console.error(err);
+    console.error(error);
     res
       .status(500)
       .json({ message: `Error in retrieving users data: ${error}` });
@@ -21,7 +21,7 @@ export async function create(req, res) {
     ).toObject();
     res.status(201).json(newUser);
   } catch (error) {
-    console.error(err);
+    console.error(error);
     res
       .status(500)
       .json({ message: `Error in registering a new user: ${error}` });

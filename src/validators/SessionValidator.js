@@ -20,7 +20,15 @@ export const getByUserId = validate(
 export const create = validate(
   z.object({
     body: z.object({
-      user: z.string({ required_error: "Session user id is required" }),
+      userId: z.string({ required_error: "Session user id is required" }),
+    }),
+  })
+);
+
+export const endSession = validate(
+  z.object({
+    params: z.object({
+      userId: z.string({ required_error: "Session user id is required" }),
     }),
   })
 );
