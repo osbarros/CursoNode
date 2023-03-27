@@ -1,9 +1,12 @@
-const express = require("express");
-const rotas = require("./routes");
+// const express = require("express");
+// const rotas = require("./routes");
+import express from "express";
+import routes from "./routes/index.js";
 
 const app = express();
 
-app.use(express.json());
-app.use(rotas);
+app.use(express.urlencoded({ extended: true })); // Default config
+app.use(express.json()); // Default config
+app.use(routes);
 
-module.exports = app;
+export default app;
