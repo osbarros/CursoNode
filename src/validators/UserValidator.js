@@ -33,6 +33,23 @@ export const create = validate(
   })
 );
 
+export const update = validate(
+  z.object({
+    body: z.object({
+      name: z.string().optional(),
+      role: z
+        .enum(["Dev", "Consultor", "Gerente"], {
+          errorMap: () => ({ message: "Role not allowed" }),
+        })
+        .optional(),
+      message: z.string().default("").optional(),
+    }),
+    params: z.object({
+      id: z.string({ required_error: "User id is required" }),
+    }),
+  })
+);
+
 export const destroy = validate(
   z.object({
     params: z.object({
