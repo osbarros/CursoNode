@@ -32,3 +32,11 @@ export const endSession = validate(
     }),
   })
 );
+
+export const getAllSessionsTotalTime = validate(
+  z.object({
+    params: z.object({
+      userId: z.string({ required_error: "Session user id is required" }),
+    }),
+  })
+);

@@ -16,4 +16,8 @@ SessionRoutes.route("/user/:userId")
   .get(SessionController.getByUserId)
   .post(SessionController.endSession);
 
+SessionRoutes.route("/user/:userId/total-hours").get(
+  SessionController.getAllSessionsTotalTime
+);
+
 export default SessionRoutes;

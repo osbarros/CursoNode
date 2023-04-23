@@ -60,5 +60,12 @@ UserSchema.pre(
     next();
   }
 );
+
+UserSchema.methods.comparePasswords = function (password) {
+  const hashedPassword = this.password;
+
+  return bcrypt.compare(password, hashedPassword);
+};
+
 const UserModel = mongoose.model("User", UserSchema);
 export default UserModel;

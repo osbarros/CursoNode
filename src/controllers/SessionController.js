@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import SessionModel from "../models/SessionModel.js";
 import * as SessionValidator from "../validators/SessionValidator.js";
 
@@ -35,8 +36,9 @@ export async function create(req, res) {
       user: userId,
       endedAt: null,
     }).exec();
+
     if (activeSession)
-      return res.status(500).json({ message: "User already logged in" });
+      return res.status(409).json({ message: "User already logged in" });
 
     const newSession = await SessionModel.create({ user: userId });
     res.status(201).json(newSession);
@@ -55,7 +57,9 @@ export async function endSession(req, res) {
       user: userId,
       endedAt: null,
     }).exec();
-    if (!foundSession) res.status(500).json({ message: "Session not found" });
+
+    if (!foundSession)
+      return res.status(404).json({ message: "Session not found" });
 
     const updatedSession = await foundSession
       .set({ endedAt: Date.now() })
@@ -66,6 +70,124 @@ export async function endSession(req, res) {
     console.error(error);
     res.status(500).json({
       message: `Error in ending session: ${error}`,
+    });
+  }
+}
+
+export async function getAllSessionsTotalTime(req, res) {
+  try {
+    const { userId } = SessionValidator.getAllSessionsTotalTime(req);
+    console.log(new Date("26-03-2023"));
+
+    const sessionsInfoByUser = await SessionModel.aggregate([
+      {
+        $match: {
+          user: new mongoose.Types.ObjectId(userId),
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "user",
+          foreignField: "_id",
+          as: "user",
+        },
+      },
+      {
+        $unwind: {
+          path: "$user",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $addFields: {
+          durationInDateFormat: {
+            $toDate: {
+              $dateDiff: {
+                startDate: "$startedAt",
+                endDate: "$endedAt",
+                unit: "millisecond",
+              },
+            },
+          },
+        },
+      },
+      {
+        $project: {
+          "user._id": 1,
+          "user.name": 1,
+          "user.role": 1,
+          startedAt: 1,
+          endedAt: 1,
+          durationInDateFormat: 1,
+          formatedDuration: {
+            $dateToString: {
+              date: "$durationInDateFormat",
+              format: "%H:%M",
+            },
+          },
+        },
+      },
+    ]);
+    // const totalTime = await SessionModel.aggregate([
+    //   {
+    //     $match: {
+    //       user: new mongoose.Types.ObjectId(userId),
+    //     },
+    //   },
+    //   {
+    //     $group: {
+    //       _id: "$user",
+    //       totalTimeInMili: {
+    //         $sum: {
+    //           $dateDiff: {
+    //             startDate: "$startedAt",
+    //             endDate: "$endedAt",
+    //             unit: "millisecond",
+    //           },
+    //         },
+    //       },
+    //     },
+    //   },
+    //   {
+    //     $lookup: {
+    //       from: "users",
+    //       localField: "_id",
+    //       foreignField: "_id",
+    //       as: "user",
+    //     },
+    //   },
+    //   {
+    //     $unwind: {
+    //       path: "$user",
+    //       preserveNullAndEmptyArrays: true,
+    //     },
+    //   },
+    //   {
+    //     $project: {
+    //       formatedTime: {
+    //         $dateToString: {
+    //           date: {
+    //             $toDate: "$totalTimeInMili",
+    //           },
+    //           format: "%H:%M:%S",
+    //         },
+    //       },
+    //       name: "$user.name",
+    //     },
+    //   },
+    //   // {
+    //   //   $project: {
+    //   //     user: 1,
+    //   //     totalHours: 1,
+    //   //   },
+    //   // },
+    // ]);
+
+    res.status(200).json(sessionsInfoByUser);
+  } catch (error) {
+    res.status(500).json({
+      message: `Error in getting sessions info: ${error}`,
     });
   }
 }
