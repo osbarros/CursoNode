@@ -5,14 +5,16 @@ import * as AuthValidator from "../validators/AuthValidator.js";
 export async function login(req, res) {
   try {
     const { email, password } = AuthValidator.login(req);
-
-    const foundUser = await UserModel.findOne({ email }).exec();
+    const foundUser = await UserModel.findOne({ email })
+      .select("+password") // Add the password to the foundUser object
+      .exec();
     if (!foundUser)
       return res.status(401).json({ message: "Wrong email or password" });
 
     const isMatch = await foundUser.comparePasswords(password);
     if (!isMatch) res.status(401).json({ message: "Wrong email or password" });
 
+    const { password: pwd, ...user } = foundUser.toObject(); // Taking off the password
     const token = jwt.sign(
       {
         user,
@@ -28,4 +30,3 @@ export async function login(req, res) {
     });
   }
 }
-export async function logout() {}

@@ -58,7 +58,6 @@ export async function update(req, res) {
 export async function destroy(req, res) {
   try {
     const { id } = UserValidator.getById(req);
-    console.log(id);
 
     const foundUser = await UserModel.findById(id).exec();
     if (!foundUser) return res.status(404).json({ message: "User not found" });

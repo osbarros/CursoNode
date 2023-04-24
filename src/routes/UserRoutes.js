@@ -1,13 +1,16 @@
 import { Router } from "express";
+import verifyJwt from "../middlewares/verifyJwt.js";
 import * as UserController from "../controllers/UserController.js";
 
 const UserRoutes = Router();
 
-UserRoutes.route("/").get(UserController.get).post(UserController.create);
+UserRoutes.route("/")
+  .get(verifyJwt, UserController.get)
+  .post(UserController.create);
 
 UserRoutes.route("/:id")
-  .get(UserController.getById)
-  .put(UserController.update)
-  .delete(UserController.destroy);
+  .get(verifyJwt, UserController.getById)
+  .put(verifyJwt, UserController.update)
+  .delete(verifyJwt, UserController.destroy);
 
 export default UserRoutes;

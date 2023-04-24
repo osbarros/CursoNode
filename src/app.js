@@ -1,5 +1,3 @@
-// const express = require("express");
-// const rotas = require("./routes");
 import express from "express";
 import routes from "./routes/index.js";
 
