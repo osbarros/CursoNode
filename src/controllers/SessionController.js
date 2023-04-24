@@ -6,7 +6,9 @@ export async function get(req, res) {
   try {
     const sessions = await SessionModel.find({ endedAt: null })
       .populate("user")
+      .sort({ startedAt: -1 })
       .exec();
+
     res.status(200).json(sessions);
   } catch (error) {
     console.error(error);
@@ -35,13 +37,20 @@ export async function create(req, res) {
     const activeSession = await SessionModel.findOne({
       user: userId,
       endedAt: null,
-    }).exec();
+    })
+      .lean()
+      .exec();
 
     if (activeSession)
       return res.status(409).json({ message: "User already logged in" });
 
-    const newSession = await SessionModel.create({ user: userId });
-    res.status(201).json(newSession);
+    const newSession = await SessionModel.create({
+      user: userId,
+      startedAt: new Date(),
+    });
+    const populatedNewSession = await newSession.populate("user");
+
+    res.status(201).json(populatedNewSession);
   } catch (error) {
     console.error(error);
     res

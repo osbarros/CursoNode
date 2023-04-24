@@ -17,7 +17,7 @@ export const create = validate(
         role: z.enum(["Dev", "Consultor", "Gerente"], {
           errorMap: () => ({ message: "Role not allowed" }),
         }),
-        message: z.string().default(""),
+        status: z.string().default(""),
         email: z
           .string({ required_error: "E-mail is required" })
           .email("Invalida e-mail"),
@@ -42,7 +42,7 @@ export const update = validate(
           errorMap: () => ({ message: "Role not allowed" }),
         })
         .optional(),
-      message: z.string().default("").optional(),
+      status: z.string().default("").optional(),
     }),
     params: z.object({
       id: z.string({ required_error: "User id is required" }),
