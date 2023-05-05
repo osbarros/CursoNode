@@ -1,10 +1,10 @@
 import jwt from "jsonwebtoken";
 import UserModel from "../models/UserModel.js";
-import * as AuthValidator from "../validators/AuthValidator.js";
 
 export async function login(req, res) {
   try {
-    const { email, password } = AuthValidator.login(req);
+    const { email, password } = req.body;
+
     const foundUser = await UserModel.findOne({ email })
       .select("+password") // Add the password to the foundUser object
       .exec();

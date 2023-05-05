@@ -1,26 +1,21 @@
 import { z } from "zod";
-import validate from "./validate.js";
 
-export const getActive = validate(
-  z.object({
-    params: z.object({
+export const getActive = z.object({
+  query: z
+    .object({
       timezone: z.string({ required_error: "Session id is required" }),
-    }),
-  })
-);
+    })
+    .optional(),
+});
 
-export const create = validate(
-  z.object({
-    body: z.object({
-      userId: z.string({ required_error: "Session user id is required" }),
-    }),
-  })
-);
+export const create = z.object({
+  body: z.object({
+    userId: z.string({ required_error: "Session user id is required" }),
+  }),
+});
 
-export const endSession = validate(
-  z.object({
-    body: z.object({
-      userId: z.string({ required_error: "Session user id is required" }),
-    }),
-  })
-);
+export const endSession = z.object({
+  body: z.object({
+    userId: z.string({ required_error: "Session user id is required" }),
+  }),
+});

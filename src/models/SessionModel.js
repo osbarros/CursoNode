@@ -16,7 +16,7 @@ const SessionSchema = new mongoose.Schema(
       default: null,
     },
   },
-  { versionKey: false }
+  { timestamps: true, versionKey: false }
 );
 
 const SessionModel = mongoose.model("Session", SessionSchema);

@@ -1,9 +1,10 @@
 import SessionModel from "../models/SessionModel.js";
-import * as SessionValidator from "../validators/SessionValidator.js";
 
 export async function getActive(req, res) {
   try {
-    const { timezone } = SessionValidator.getActive(req);
+    const timezone =
+      req.query.timezone || Intl.DateTimeFormat().resolvedOptions().timeZone;
+
     const sessions = await SessionModel.aggregate([
       {
         $match: {
@@ -77,7 +78,7 @@ export async function getActive(req, res) {
 
 export async function create(req, res) {
   try {
-    const { userId } = SessionValidator.create(req);
+    const { userId } = req.body;
 
     const activeSession = await SessionModel.findOne({
       user: userId,
@@ -104,7 +105,7 @@ export async function create(req, res) {
 }
 export async function endSession(req, res) {
   try {
-    const { userId } = SessionValidator.endSession(req);
+    const { userId } = req.body;
 
     const foundSession = await SessionModel.findOne({
       user: userId,

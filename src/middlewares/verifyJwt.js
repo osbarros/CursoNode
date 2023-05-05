@@ -15,7 +15,7 @@ export default async function verifyJWT(req, res, next) {
   jwt.verify(token, process.env.TOKEN_SECRET, (err, decoded) => {
     if (err) return res.status(401).json({ message: "Invalid token" });
 
-    res.user = decoded.user;
+    req.user = decoded.user;
     next();
   });
 }

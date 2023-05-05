@@ -1,5 +1,4 @@
 import UserModel from "../models/UserModel.js";
-import * as UserValidator from "../validators/UserValidator.js";
 
 export async function get(req, res) {
   try {
@@ -14,7 +13,7 @@ export async function get(req, res) {
 }
 export async function getById(req, res) {
   try {
-    const { id } = UserValidator.getById(req);
+    const { id } = req.params;
 
     const foundUser = await UserModel.findById(id).lean().exec();
     if (!foundUser) return res.status(404).json({ message: "User not found" });
@@ -29,7 +28,7 @@ export async function getById(req, res) {
 }
 export async function create(req, res) {
   try {
-    const { confirmPassword, ...inputData } = UserValidator.create(req);
+    const { confirmPassword, ...inputData } = req.body;
     const { password, ...newUser } = (
       await UserModel.create(inputData)
     ).toObject();
@@ -43,7 +42,10 @@ export async function create(req, res) {
 }
 export async function update(req, res) {
   try {
-    const { id, ...inputData } = UserValidator.update(req);
+    const {
+      params: { id },
+      body: inputData,
+    } = req;
 
     const foundUser = await UserModel.findById(id).exec();
     if (!foundUser) return res.status(404).json({ message: "User not found" });
@@ -57,7 +59,7 @@ export async function update(req, res) {
 }
 export async function destroy(req, res) {
   try {
-    const { id } = UserValidator.getById(req);
+    const { id } = req.params;
 
     const foundUser = await UserModel.findById(id).exec();
     if (!foundUser) return res.status(404).json({ message: "User not found" });

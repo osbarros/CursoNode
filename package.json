@@ -18,6 +18,7 @@
     "jsonwebtoken": "^9.0.0",
     "mongoose": "^7.0.0",
     "nodemon": "^2.0.21",
-    "zod": "^3.21.4"
+    "zod": "^3.21.4",
+    "zod-express-middleware": "^1.4.0"
   }
 }

@@ -31,7 +31,7 @@ const UserSchema = new mongoose.Schema(
       default: "",
     },
   },
-  { versionKey: false }
+  { timestamps: true, versionKey: false }
 );
 
 UserSchema.pre("save", async function (next) {
@@ -47,7 +47,7 @@ UserSchema.pre("save", async function (next) {
 
   user.password = hashedPassword;
 
-  return next();
+  next();
 });
 
 // Delete all instances associated to that user
