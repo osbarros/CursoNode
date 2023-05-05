@@ -1,4 +1,5 @@
 import SessionModel from "../models/SessionModel.js";
+import UserModel from "../models/UserModel.js";
 
 export async function getActive(req, res) {
   try {
@@ -80,13 +81,15 @@ export async function create(req, res) {
   try {
     const { userId } = req.body;
 
+    const foundUser = await UserModel.findById(userId).lean().exec();
+    if (!foundUser) return res.status(404).json({ message: "User not found" });
+
     const activeSession = await SessionModel.findOne({
       user: userId,
       endedAt: null,
     })
       .lean()
       .exec();
-
     if (activeSession)
       return res.status(409).json({ message: "User already logged in" });
 
@@ -107,11 +110,13 @@ export async function endSession(req, res) {
   try {
     const { userId } = req.body;
 
+    const foundUser = await UserModel.findById(userId).lean().exec();
+    if (!foundUser) return res.status(404).json({ message: "User not found" });
+
     const foundSession = await SessionModel.findOne({
       user: userId,
       endedAt: null,
     }).exec();
-
     if (!foundSession)
       return res.status(404).json({ message: "Session not found" });
 
